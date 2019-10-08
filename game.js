@@ -198,3 +198,10 @@ function draw() {
 //Code to get random hex color provided by user on stack overflow:
 //https://stackoverflow.com/a/5092846
 function randomHexColor() { return '#' + (Math.random() * 0xFFFFFF << 0).toString(16); }
+
+/*
+Original source
+https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript
+Contributors
+JoeParrilla, mdnwebdocs-bot, wbamberg, jswisher, jolosan, cristianvnica, chrisdavidmills, Twoteka, Jeremie, end3r, fscholz, rabimba
+*/
