@@ -28,6 +28,7 @@ h1 {
 }
 
 canvas {
+  display: block;
   background: #eee;
   border: 15px solid rgb(0, 89, 253);
 }
