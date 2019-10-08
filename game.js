@@ -1,13 +1,14 @@
 let canvas = document.getElementById("game");
 let ctx = canvas.getContext("2d");
 
+let ballSpeed = 3.2;
 let ballRadius = 10;
 
 let x = canvas.width / 2;
 let y = canvas.height - 30;
 
-let dx = 2;
-let dy = -2;
+let dx = ballSpeed;
+let dy = -ballSpeed;
 
 let paddleHeight = 10;
 let paddleWidth = 75;
@@ -23,6 +24,8 @@ let brickHeight = 20;
 let brickPadding = 10;
 let brickOffsetTop = 30;
 let brickOffsetLeft = 30;
+
+let brickColor = randomHexColor();
 
 let score = 0;
 let lives = 3;
@@ -109,7 +112,8 @@ function drawBricks() {
         bricks[c][r].y = brickY;
         ctx.beginPath();
         ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = "#0095DD";
+        // ctx.fillStyle = "#0095DD";
+        ctx.fillStyle = brickColor;
         ctx.fill();
         ctx.closePath();
       }
@@ -177,3 +181,7 @@ function draw() {
 }
 
 draw();
+
+//Code to get random hex color provided by user on stack overflow:
+//https://stackoverflow.com/a/5092846
+function randomHexColor() { return '#' + (Math.random() * 0xFFFFFF << 0).toString(16); }
