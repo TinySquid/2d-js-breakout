@@ -1,6 +1,8 @@
 let canvas = document.getElementById("game");
 let ctx = canvas.getContext("2d");
 
+let gameIsActive = false;
+
 let ballSpeed = 3.2;
 let ballRadius = 10;
 
@@ -49,7 +51,14 @@ function keyDownHandler(e) {
   else if (e.key == "Left" || e.key == "ArrowLeft") {
     leftPressed = true;
   }
+  else if (e.key == "Enter") {
+    if (!gameIsActive) {
+      draw();
+    }
+  }
 }
+
+drawStartText();
 
 function keyUpHandler(e) {
   if (e.key == "Right" || e.key == "ArrowRight") {
@@ -133,6 +142,12 @@ function drawLives() {
   ctx.fillText("Lives: " + lives, canvas.width - 65, 20);
 }
 
+function drawStartText() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("Press ENTER to start the game!", canvas.width / 2 - 115, canvas.height / 2);
+}
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBricks();
@@ -179,8 +194,6 @@ function draw() {
   y += dy;
   requestAnimationFrame(draw);
 }
-
-draw();
 
 //Code to get random hex color provided by user on stack overflow:
 //https://stackoverflow.com/a/5092846
