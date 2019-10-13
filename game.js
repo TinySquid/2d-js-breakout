@@ -1,15 +1,7 @@
-import { canvas, ctx } from './modules/Canvas.js'
+import { canvas, ctx } from './modules/Canvas.js';
+import Ball from './modules/Ball.js';
 
 let gameIsActive = false;
-
-let ballSpeed = 3.2;
-let ballRadius = 10;
-
-let x = canvas.width / 2;
-let y = canvas.height - 30;
-
-let dx = ballSpeed;
-let dy = -ballSpeed;
 
 let paddleHeight = 10;
 let paddleWidth = 75;
@@ -94,14 +86,6 @@ function collisionDetection() {
   }
 }
 
-function drawBall() {
-  ctx.beginPath();
-  ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-  ctx.fillStyle = "#0095DD";
-  ctx.fill();
-  ctx.closePath();
-}
-
 function drawPaddle() {
   ctx.beginPath();
   ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
@@ -147,50 +131,62 @@ function drawStartText() {
   ctx.fillText("Press ENTER to start the game!", canvas.width / 2 - 115, canvas.height / 2);
 }
 
+let ball = new Ball(canvas.width / 2, canvas.height - 30, 10, '#364167', 3);
+
+let dx = ball.getSpeed();
+let dy = -ball.getSpeed();
+
+let ballX = ball.getPos().x;
+let ballY = ball.getPos().y;
+
+let ballSpeed = ball.getSpeed();
+
+let resetPos = { x: canvas.width / 2, y: canvas.height - 30 };
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawBricks();
-  drawBall();
+  //drawBricks();
+  ball.draw();
   drawPaddle();
   drawScore();
   drawLives();
-  collisionDetection();
+  //collisionDetection();
 
-  if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
-    dx = -dx;
+  if (ballX + dx > canvas.width - ball.getSize()) { //Right wall detection
+    dx = -ballSpeed;
+  } else if (ballX + dx < ball.getSize()) { //Left wall detection
+    dx = ballSpeed;
   }
-  if (y + dy < ballRadius) {
-    dy = -dy;
-  }
-  else if (y + dy > canvas.height - ballRadius) {
-    if (x > paddleX && x < paddleX + paddleWidth) {
-      dy = -dy;
-    }
-    else {
-      lives--;
-      if (!lives) {
+  if (ballY + dy < ball.getSize()) { //Roof detection
+    dy = ballSpeed;
+  } else if (ballY + dy > canvas.height - ball.getSize()) { //Floor area detection
+    if (ballX > paddleX && ballX < paddleX + paddleWidth) { //Paddle hit detection
+      dy = -ballSpeed;
+    } else {
+      lives--; //Lose 1 life if ball hit floor and not paddle
+      if (!lives) { //Game over detection
         alert("GAME OVER");
         document.location.reload();
-      }
-      else {
-        x = canvas.width / 2;
-        y = canvas.height - 30;
-        dx = 3;
-        dy = -3;
+      } else { //Reset ball position & paddle position
+        ball.setPos(resetPos);
+        ballX = ball.getPos().x;
+        ballY = ball.getPos().y;
+        dx = ball.getSpeed();
+        dy = -ball.getSpeed();
         paddleX = (canvas.width - paddleWidth) / 2;
       }
     }
   }
 
-  if (rightPressed && paddleX < canvas.width - paddleWidth) {
+  if (rightPressed && paddleX < canvas.width - paddleWidth) { //Move paddle right on key
     paddleX += 7;
   }
-  else if (leftPressed && paddleX > 0) {
+  else if (leftPressed && paddleX > 0) { //Move paddle left on key
     paddleX -= 7;
   }
 
-  x += dx;
-  y += dy;
+  ball.setPos({ x: ballX += dx, y: ballY += dy });
+
   requestAnimationFrame(draw);
 }
 
