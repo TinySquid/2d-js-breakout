@@ -1,3 +1,5 @@
+@import './reset.css';
+
 * {
   box-sizing: border-box;
 }
@@ -19,11 +21,11 @@ body {
   flex-flow: column wrap;
   justify-content: center;
   align-items: center;
-  margin: 12% auto;
+  margin: 3%;
 }
 
 h1 {
-  margin: 2%;
+  margin: 1%;
   font-size: 4rem;
 }
 
