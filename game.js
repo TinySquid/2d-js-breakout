@@ -36,12 +36,19 @@ const keyDownHandler = e => {
     }
   } else if (e.key == "Escape") {
     if (gameIsActive) {
+      cancelAnimationFrame(frameReqHandle);
       gameIsActive = false;
       drawText('GAME PAUSED',
         gameFont,
         gameFontSize,
         gameFontColor,
         { x: canvas.width / 2 - 60, y: canvas.height / 2 }
+      )
+      drawText('Press ESCAPE to unpause',
+        gameFont,
+        gameFontSize,
+        gameFontColor,
+        { x: canvas.width / 2 - 100, y: canvas.height / 2 + 20 }
       )
     } else {
       gameIsActive = true;
@@ -168,7 +175,7 @@ let now, delta;
 let then = performance.now();
 let interval = 1000 / fps;
 
-function draw() {
+const draw = () => {
   if (gameIsActive) {
     frameReqHandle = requestAnimationFrame(draw);
 
@@ -227,6 +234,8 @@ function draw() {
     }
   }
 }
+
+
 
 //Code to get random hex color provided by user on stack overflow:
 //https://stackoverflow.com/a/5092846
