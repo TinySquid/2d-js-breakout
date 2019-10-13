@@ -147,14 +147,14 @@ let resetPos = { x: canvas.width / 2, y: canvas.height - 30 };
 //Sync to FPS code credit goes to Rishabh @ https://codetheory.in/controlling-the-frame-rate-with-requestanimationframe/
 let fps = 60;
 let now, delta;
-let then = Date.now();
+let then = performance.now();
 let interval = 1000 / fps;
 
 function draw() {
 
   requestAnimationFrame(draw);
 
-  now = Date.now();
+  now = performance.now();
   delta = now - then;
 
   if (delta > interval) {
