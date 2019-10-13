@@ -1,7 +1,9 @@
 import { canvas, ctx } from './modules/Canvas.js';
 import { drawText } from './modules/Display.js';
-import Ball from './modules/Ball.js';
+
 import Paddle from './modules/Paddle.js';
+import Ball from './modules/Ball.js';
+import Brick from './modules/Brick.js'
 
 let gameIsActive = false;
 let frameReqHandle;
@@ -18,6 +20,40 @@ let ball = new Ball({ x: canvas.width / 2, y: canvas.height - 30 }, 10, '#364167
 
 let dx = ball.speed;
 let dy = -ball.speed;
+
+let brickRowCount = 7;
+let brickColumnCount = 4;
+let brickWidth = 75;
+let brickHeight = 25;
+let brickPadding = 10;
+let brickOffsetTop = 30;
+let brickOffsetLeft = 30;
+
+let bricks = [];
+for (let c = 0; c < brickColumnCount; c++) {
+  bricks[c] = [];
+  for (let r = 0; r < brickRowCount; r++) {
+    let brickX = (r * (brickWidth + brickPadding)) + brickOffsetLeft;
+    let brickY = (c * (brickHeight + brickPadding)) + brickOffsetTop;
+    let brick = new Brick(
+      { x: brickX, y: brickY },
+      brickWidth,
+      brickHeight,
+      randomHexColor(),
+      true
+    );
+
+    bricks[c][r] = brick;
+  }
+}
+
+const drawBricks = () => {
+  bricks.forEach(brickRow => {
+    brickRow.forEach(brick => {
+      brick.draw();
+    });
+  });
+}
 
 let rightPressed = false;
 let leftPressed = false;
@@ -78,24 +114,6 @@ document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
 
 
-// let brickRowCount = 5;
-// let brickColumnCount = 3;
-// let brickWidth = 75;
-// let brickHeight = 20;
-// let brickPadding = 10;
-// let brickOffsetTop = 30;
-// let brickOffsetLeft = 30;
-
-// let brickColor = randomHexColor();
-
-// let bricks = [];
-// for (let c = 0; c < brickColumnCount; c++) {
-//   bricks[c] = [];
-//   for (let r = 0; r < brickRowCount; r++) {
-//     bricks[c][r] = { x: 0, y: 0, status: 1 };
-//   }
-// }
-
 // function collisionDetection() {
 //   for (let c = 0; c < brickColumnCount; c++) {
 //     for (let r = 0; r < brickRowCount; r++) {
@@ -115,24 +133,7 @@ document.addEventListener("mousemove", mouseMoveHandler, false);
 //   }
 // }
 
-// function drawBricks() {
-//   for (let c = 0; c < brickColumnCount; c++) {
-//     for (let r = 0; r < brickRowCount; r++) {
-//       if (bricks[c][r].status == 1) {
-//         let brickX = (r * (brickWidth + brickPadding)) + brickOffsetLeft;
-//         let brickY = (c * (brickHeight + brickPadding)) + brickOffsetTop;
-//         bricks[c][r].x = brickX;
-//         bricks[c][r].y = brickY;
-//         ctx.beginPath();
-//         ctx.rect(brickX, brickY, brickWidth, brickHeight);
-//         // ctx.fillStyle = "#0095DD";
-//         ctx.fillStyle = brickColor;
-//         ctx.fill();
-//         ctx.closePath();
-//       }
-//     }
-//   }
-// }
+
 
 const drawScore = () => {
   drawText(`Score: ${score}`,
@@ -186,12 +187,11 @@ const draw = () => {
       then = now - (delta % interval);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      //drawBricks();
-      ball.draw();
-      paddle.draw();
-      // drawPaddle();
       drawScore();
       drawLives();
+      paddle.draw();
+      ball.draw();
+      drawBricks();
       //collisionDetection();
 
       if (ball.position.x + dx > canvas.width - ball.size) { //Right wall detection
