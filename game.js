@@ -143,51 +143,67 @@ let ballSpeed = ball.getSpeed();
 
 let resetPos = { x: canvas.width / 2, y: canvas.height - 30 };
 
+
+//Sync to FPS code credit goes to Rishabh @ https://codetheory.in/controlling-the-frame-rate-with-requestanimationframe/
+let fps = 60;
+let now, delta;
+let then = Date.now();
+let interval = 1000 / fps;
+
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  //drawBricks();
-  ball.draw();
-  drawPaddle();
-  drawScore();
-  drawLives();
-  //collisionDetection();
-
-  if (ballX + dx > canvas.width - ball.getSize()) { //Right wall detection
-    dx = -ballSpeed;
-  } else if (ballX + dx < ball.getSize()) { //Left wall detection
-    dx = ballSpeed;
-  }
-  if (ballY + dy < ball.getSize()) { //Roof detection
-    dy = ballSpeed;
-  } else if (ballY + dy > canvas.height - ball.getSize()) { //Floor area detection
-    if (ballX > paddleX && ballX < paddleX + paddleWidth) { //Paddle hit detection
-      dy = -ballSpeed;
-    } else {
-      lives--; //Lose 1 life if ball hit floor and not paddle
-      if (!lives) { //Game over detection
-        alert("GAME OVER");
-        document.location.reload();
-      } else { //Reset ball position & paddle position
-        ball.setPos(resetPos);
-        ballX = ball.getPos().x;
-        ballY = ball.getPos().y;
-        dx = ball.getSpeed();
-        dy = -ball.getSpeed();
-        paddleX = (canvas.width - paddleWidth) / 2;
-      }
-    }
-  }
-
-  if (rightPressed && paddleX < canvas.width - paddleWidth) { //Move paddle right on key
-    paddleX += 7;
-  }
-  else if (leftPressed && paddleX > 0) { //Move paddle left on key
-    paddleX -= 7;
-  }
-
-  ball.setPos({ x: ballX += dx, y: ballY += dy });
 
   requestAnimationFrame(draw);
+
+  now = Date.now();
+  delta = now - then;
+
+  if (delta > interval) {
+    then = now - (delta % interval);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //drawBricks();
+    ball.draw();
+    drawPaddle();
+    drawScore();
+    drawLives();
+    //collisionDetection();
+
+    if (ballX + dx > canvas.width - ball.getSize()) { //Right wall detection
+      dx = -ballSpeed;
+    } else if (ballX + dx < ball.getSize()) { //Left wall detection
+      dx = ballSpeed;
+    }
+    if (ballY + dy < ball.getSize()) { //Roof detection
+      dy = ballSpeed;
+    } else if (ballY + dy > canvas.height - ball.getSize()) { //Floor area detection
+      if (ballX > paddleX && ballX < paddleX + paddleWidth) { //Paddle hit detection
+        dy = -ballSpeed;
+      } else {
+        lives--; //Lose 1 life if ball hit floor and not paddle
+        if (!lives) { //Game over detection
+          alert("GAME OVER");
+          document.location.reload();
+        } else { //Reset ball position & paddle position
+          ball.setPos(resetPos);
+          ballX = ball.getPos().x;
+          ballY = ball.getPos().y;
+          dx = ball.getSpeed();
+          dy = -ball.getSpeed();
+          paddleX = (canvas.width - paddleWidth) / 2;
+        }
+      }
+    }
+
+    if (rightPressed && paddleX < canvas.width - paddleWidth) { //Move paddle right on key
+      paddleX += 7;
+    }
+    else if (leftPressed && paddleX > 0) { //Move paddle left on key
+      paddleX -= 7;
+    }
+
+    ball.setPos({ x: ballX += dx, y: ballY += dy });
+
+  }
 }
 
 //Code to get random hex color provided by user on stack overflow:
