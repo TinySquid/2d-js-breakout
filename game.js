@@ -1,5 +1,4 @@
-let canvas = document.getElementById("game");
-let ctx = canvas.getContext("2d");
+import { canvas, ctx } from './modules/Canvas.js'
 
 let gameIsActive = false;
 
