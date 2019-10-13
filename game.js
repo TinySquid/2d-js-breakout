@@ -55,6 +55,25 @@ const drawBricks = () => {
   });
 }
 
+function collisionDetection() {
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      let b = bricks[c][r];
+      if (b.isActive === true) {
+        if (ball.position.x > b.position.x && ball.position.x < b.position.x + brickWidth && ball.position.y > b.position.y && ball.position.y < b.position.y + brickHeight) {
+          dy = -dy;
+          b.isActive = false;
+          score++;
+          if (score == brickRowCount * brickColumnCount) {
+            alert("YOU WIN, CONGRATS!");
+            document.location.reload();
+          }
+        }
+      }
+    }
+  }
+}
+
 let rightPressed = false;
 let leftPressed = false;
 
@@ -113,28 +132,6 @@ document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
 
-
-// function collisionDetection() {
-//   for (let c = 0; c < brickColumnCount; c++) {
-//     for (let r = 0; r < brickRowCount; r++) {
-//       let b = bricks[c][r];
-//       if (b.status == 1) {
-//         if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
-//           dy = -dy;
-//           b.status = 0;
-//           score++;
-//           if (score == brickRowCount * brickColumnCount) {
-//             alert("YOU WIN, CONGRATS!");
-//             document.location.reload();
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
-
-
-
 const drawScore = () => {
   drawText(`Score: ${score}`,
     gameFont,
@@ -192,7 +189,7 @@ const draw = () => {
       paddle.draw();
       ball.draw();
       drawBricks();
-      //collisionDetection();
+      collisionDetection();
 
       if (ball.position.x + dx > canvas.width - ball.size) { //Right wall detection
         dx = -ball.speed;
@@ -234,8 +231,6 @@ const draw = () => {
     }
   }
 }
-
-
 
 //Code to get random hex color provided by user on stack overflow:
 //https://stackoverflow.com/a/5092846
